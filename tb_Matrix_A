@@ -58,7 +58,85 @@ begin
     load_A = 0;
 
     #10;
+  `timescale 1ns/1ps
+
+module tb_matrix_A;
+
+reg clk;
+reg reset;
+reg load_A;
+
+  reg [3:0] a00;
+  reg [3:0] a01;
+  reg [3:0] a10;
+  reg [3:0] a11;
+
+  wire [3:0] A00;
+  wire [3:0] A01;
+  wire [3:0] A10;
+  wire [3:0] A11;
+
+matrix_A uut (
+    .clk(clk),
+    .reset(reset),
+    .load_A(load_A),
+
+  .a00(a00),
+  .a01(a01),
+  .a10(a10),
+  .a11(a11),
+
+    .A00(A00),
+    .A01(A01),
+    .A10(A10),
+    .A11(A11)
+);
+
+always #5 clk = ~clk;
+
+initial
+begin
+    clk = 0;
+    reset = 1;
+    load_A = 0;
+
+    a00 = 0;
+    a01 = 0;
+    a10 = 0;
+    a11 = 0;
+
+    #10;
+
+    reset = 0;
   
+    a00 = 4'd1;
+    a01 = 4'd2;
+    a10 = 4'd3;
+    a11 = 4'd4;
+
+    load_A = 1;
+
+    #10;
+    load_A = 0;
+	  $display("--------------------------------");
+    $display("        MATRIX A RESULT");
+    $display("--------------------------------");
+    $display("A00 = %d", A00);
+    $display("A01 = %d", A01);
+    $display("A10 = %d", A10);
+    $display("A11 = %d", A11);
+    $display("--------------------------------");
+
+    #10;
+  
+    $finish;
+end
+initial begin
+    $dumpfile("dump.vcd");
+  $dumpvars(0, tb_matrix_A);   
+end
+endmodule
+
     $finish;
 end
 initial begin
